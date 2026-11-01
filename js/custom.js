@@ -179,3 +179,27 @@ uiToggleBtn.addEventListener("click", () => {
     );
   }
 });
+
+const backToTopButton = document.getElementById("back-to-top");
+const backToTopScrollThreshold = 300;
+
+function updateBackToTopVisibility() {
+  backToTopButton.classList.toggle(
+    "is-visible",
+    window.scrollY > backToTopScrollThreshold,
+  );
+}
+
+window.addEventListener("scroll", updateBackToTopVisibility, {
+  passive: true,
+});
+updateBackToTopVisibility();
+
+backToTopButton.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth",
+  });
+});

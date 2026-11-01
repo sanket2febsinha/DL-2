@@ -1730,56 +1730,6 @@ p {
   pointer-events: auto;
 }
 
-@media (max-width: 767px) {
-  .slick-prev {
-    left: 0 !important;
-    scale: 0.8;
-    transform-origin: left;
-  }
-  .slick-next {
-    right: -9px !important;
-    scale: 0.8;
-    transform-origin: right;
-  }
-
-  #hero-card-container .hero-adv-icon-wrap i {
-    font-size: 12px;
-  }
-  .content-peek-section .peek-stat-value {
-    justify-content: start;
-  }
-  #ui-toggle-btn {
-    width: 28px;
-    height: 19px;
-
-    padding-top: 6px;
-  }
-  .content-peek-section .outfit-badge {
-    line-height: normal;
-  }
-  h2 {
-    font-size: 35px;
-  }
-  #hero-card-container .hero-adv-tagline {
-    letter-spacing: 0;
-  }
-  #main-header {
-    padding: 8px 10px;
-  }
-  #hero-card-container .hero-eyebrow-pill {
-    letter-spacing: 0em;
-    flex-direction: column;
-    line-height: normal;
-  }
-  #hero-card-container .hero-adv-label {
-    font-size: 20px;
-  }
-  #hero-card-container .hero-adv-icon-wrap {
-    width: 30px;
-    height: 30px;
-  }
-}
-
 .testimonial-review-copy {
   margin-bottom: 1.5rem;
   color: #6c757d;
@@ -1998,6 +1948,46 @@ p {
 .ui-toggle-button {
   position: fixed;
   color: #fff;
+}
+.back-to-top {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 1050;
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #ffc107;
+  color: #212529;
+  box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 25%);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.75rem);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease,
+    visibility 200ms ease;
+  cursor: pointer;
+}
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.back-to-top:hover {
+  background: #e0a800;
+}
+.back-to-top:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top {
+    transition: none;
+  }
 }
 .mobile-nav-toggle-button {
   padding: 0.25rem;
@@ -2423,7 +2413,59 @@ p {
   line-height: 1.2;
   color: #212529;
 }
+@media (max-width: 767px) {
+  .back-to-top {
+    width: 2rem;
+    height: 2rem;
+  }
+  .slick-prev {
+    left: 0 !important;
+    scale: 0.8;
+    transform-origin: left;
+  }
+  .slick-next {
+    right: -9px !important;
+    scale: 0.8;
+    transform-origin: right;
+  }
 
+  #hero-card-container .hero-adv-icon-wrap i {
+    font-size: 12px;
+  }
+  .content-peek-section .peek-stat-value {
+    justify-content: start;
+  }
+  #ui-toggle-btn {
+    width: 28px;
+    height: 19px;
+
+    padding-top: 6px;
+  }
+  .content-peek-section .outfit-badge {
+    line-height: normal;
+  }
+  h2 {
+    font-size: 35px;
+  }
+  #hero-card-container .hero-adv-tagline {
+    letter-spacing: 0;
+  }
+  #main-header {
+    padding: 8px 10px;
+  }
+  #hero-card-container .hero-eyebrow-pill {
+    letter-spacing: 0em;
+    flex-direction: column;
+    line-height: normal;
+  }
+  #hero-card-container .hero-adv-label {
+    font-size: 20px;
+  }
+  #hero-card-container .hero-adv-icon-wrap {
+    width: 30px;
+    height: 30px;
+  }
+}
 @media (min-width: 576px) {
   .fixed-departures-section {
     padding-right: 1.5rem;
