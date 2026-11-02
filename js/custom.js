@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const sitePreloader = document.getElementById("site-preloader");
 const preloaderProgress = document.getElementById("preloader-progress");
 const heroCardContainer = document.getElementById("hero-card-container");
@@ -204,6 +203,3 @@ backToTopButton.addEventListener("click", () => {
       : "smooth",
   });
 });
-=======
-// Main JavaScript file
->>>>>>> e28702d2baabb50de17a9c1f8dd8ae93c7a029e2
