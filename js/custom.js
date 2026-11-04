@@ -156,27 +156,44 @@ const uiToggleBtn = document.getElementById("ui-toggle-btn");
 const mainHeader = document.getElementById("main-header");
 const iconUp = document.getElementById("toggle-icon-up");
 const iconDown = document.getElementById("toggle-icon-down");
+const uiToggleTooltip = document.querySelector(".ui-toggle-tooltip");
+const uiToggleExpandText =
+  "Click here to view full display of the background Images";
 
 let isUiHidden = false;
 
 uiToggleBtn.addEventListener("click", () => {
   isUiHidden = !isUiHidden;
+  const toggleText = isUiHidden ? "Back" : uiToggleExpandText;
+  uiToggleTooltip.textContent = toggleText;
+  uiToggleBtn.setAttribute("aria-label", toggleText);
+
   if (isUiHidden) {
     mainHeader.classList.add("header-hidden");
     heroCardContainer.classList.add("hero-hidden");
-    iconUp.classList.replace("ui-toggle-icon-visible", "ui-toggle-icon-hidden");
-    iconDown.classList.replace(
-      "ui-toggle-icon-hidden",
-      "ui-toggle-icon-visible",
-    );
+    if (iconUp && iconDown) {
+      iconUp.classList.replace(
+        "ui-toggle-icon-visible",
+        "ui-toggle-icon-hidden",
+      );
+      iconDown.classList.replace(
+        "ui-toggle-icon-hidden",
+        "ui-toggle-icon-visible",
+      );
+    }
   } else {
     mainHeader.classList.remove("header-hidden");
     heroCardContainer.classList.remove("hero-hidden");
-    iconUp.classList.replace("ui-toggle-icon-hidden", "ui-toggle-icon-visible");
-    iconDown.classList.replace(
-      "ui-toggle-icon-visible",
-      "ui-toggle-icon-hidden",
-    );
+    if (iconUp && iconDown) {
+      iconUp.classList.replace(
+        "ui-toggle-icon-hidden",
+        "ui-toggle-icon-visible",
+      );
+      iconDown.classList.replace(
+        "ui-toggle-icon-visible",
+        "ui-toggle-icon-hidden",
+      );
+    }
   }
 });
 
