@@ -1816,7 +1816,7 @@ p {
 
 .trek-card-content {
   display: flex;
-  flex: 1;
+  /* flex: 1; */
   flex-direction: column;
   padding: 1.5rem;
 }
