@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Full-Width CenterMode Slick Slider</title>
+
+    <!-- Google Fonts for clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Slick Slider CSS & Theme CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"
+    />
+
+    <style>
+      /* ==========================================================================
+       1. Base & Theme Variables
+       ========================================================================== */
+      :root {
+        --bg-page: #0f172a;
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --accent: #38bdf8;
+        --card-radius: 16px;
+        --transition-speed: 0.45s;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background:
+          linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+          url("17.jpg") center/cover no-repeat;
+        color: var(--text-primary);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow-x: hidden;
+      }
+
+      /* ==========================================================================
+       2. Section & Header Layout
+       ========================================================================== */
+      .showcase-header {
+        text-align: center;
+        padding: 0 20px;
+        margin-bottom: 36px;
+      }
+
+      .showcase-header h1 {
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 8px;
+      }
+
+      .showcase-header p {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        max-width: 540px;
+        margin: 0 auto;
+      }
+
+      /* Outer wrapper prevents horizontal scrollbars from peeking slides */
+      .fullwidth-slider-wrapper {
+        width: 100%;
+        overflow: hidden;
+        padding: 20px 0 50px;
+        position: relative;
+      }
+
+      /* ==========================================================================
+       3. Slick Slider CenterMode Overrides
+       ========================================================================== */
+      /* Allow adjacent slides to peek outside the main track container */
+      .center-mode-slider .slick-list {
+        overflow: visible;
+      }
+
+      /* Slide wrapper handles spacing so Slick's width math remains accurate */
+      .slide-item {
+        padding: 0 10px;
+        outline: none;
+      }
+
+      /* Inactive / Side Slide State */
+      .slide-card {
+        position: relative;
+        height: 360px;
+        border-radius: var(--card-radius);
+        overflow: hidden;
+        background-color: #1e293b;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        transform: scale(0.88);
+        opacity: 0.55;
+        filter: brightness(0.75);
+        transition:
+          transform var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1),
+          opacity var(--transition-speed) ease,
+          filter var(--transition-speed) ease,
+          box-shadow var(--transition-speed) ease;
+      }
+
+      .slide-card:hover {
+        opacity: 0.85;
+        filter: brightness(0.95);
+      }
+
+      /* Active Center Slide State
+       Note: Targeting both .slick-center and .slick-current prevents flicker on infinite clone transitions */
+      .slick-center .slide-card,
+      .slick-current .slide-card {
+        transform: scale(1.04);
+        opacity: 1;
+        filter: brightness(1);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+        z-index: 5;
+      }
+
+      /* Inactive / Side Slide State */
+      .slide-card {
+        position: relative;
+        height: 420px;
+        border-radius: var(--card-radius);
+        overflow: hidden;
+        background-color: #1e293b;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        transform: scale(0.9);
+        opacity: 0.45;
+        filter: brightness(0.75);
+        transition:
+          transform var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1),
+          opacity var(--transition-speed) ease,
+          filter var(--transition-speed) ease,
+          box-shadow var(--transition-speed) ease;
+      }
+
+      /* Active Center Slide State
+       Note: Targeting both .slick-center and .slick-current prevents flicker on infinite clone transitions */
+      .slick-center .slide-card,
+      .slick-current .slide-card {
+        transform: scale(1);
+        opacity: 1;
+        filter: brightness(1);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+      }
+
+      /* ==========================================================================
+       4. Slide Card Content Styling
+       ========================================================================== */
+      .slide-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.7s ease;
+      }
+
+      .slick-center .slide-card:hover img {
+        transform: scale(1.04);
+      }
+
+      .slide-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(15, 23, 42, 0.92) 0%,
+          rgba(15, 23, 42, 0.35) 55%,
+          transparent 100%
+        );
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 22px;
+        opacity: 0;
+        transform: translateY(12px);
+        transition:
+          opacity 0.4s ease 0.1s,
+          transform 0.4s ease 0.1s;
+      }
+
+      /* Reveal caption smoothly only on the centered slide */
+      .slick-center .slide-overlay,
+      .slick-current .slide-overlay {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .slide-tag {
+        display: inline-block;
+        width: fit-content;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+        background: rgba(56, 189, 248, 0.15);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        padding: 3px 9px;
+        border-radius: 999px;
+        margin-bottom: 8px;
+      }
+
+      .slide-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: #ffffff;
+      }
+
+      .slide-desc {
+        font-size: 0.85rem;
+        color: #cbd5e1;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* Expand badge icon on hover */
+      .expand-badge {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transform: scale(0.85);
+        transition:
+          opacity 0.25s ease,
+          transform 0.25s ease,
+          background 0.25s ease;
+      }
+
+      .slide-card:hover .expand-badge,
+      .slick-center .slide-card .expand-badge {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .slide-card:hover .expand-badge {
+        background: var(--accent);
+        color: #0f172a;
+      }
+
+      .center-mode-slider .slick-prev {
+        left: 32px;
+      }
+
+      .center-mode-slider .slick-next {
+        right: 32px;
+      }
+
+      .center-mode-slider .slick-prev:before,
+      .center-mode-slider .slick-next:before {
+        font-size: 20px;
+        opacity: 1;
+        color: #ffffff;
+      }
+
+      /* Dots styling */
+      .center-mode-slider .slick-dots {
+        bottom: -36px;
+      }
+
+      .center-mode-slider .slick-dots li button:before {
+        font-size: 10px;
+        color: #64748b;
+        opacity: 1;
+        transition:
+          color 0.25s ease,
+          transform 0.25s ease;
+      }
+
+      .center-mode-slider .slick-dots li.slick-active button:before {
+        color: var(--accent);
+        transform: scale(1.35);
+      }
+
+      /* ==========================================================================
+       6. Lightbox Modal for Full-Size Image Preview
+       ========================================================================== */
+      .lightbox-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(2, 6, 23, 0.92);
+        backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s ease;
+      }
+
+      .lightbox-modal.is-open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .lightbox-content {
+        position: relative;
+        max-width: 1100px;
+        width: 100%;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transform: scale(0.94);
+        transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+
+      .lightbox-modal.is-open .lightbox-content {
+        transform: scale(1);
+      }
+
+      .lightbox-image-wrap {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: #0f172a;
+      }
+
+      .lightbox-image-wrap img {
+        display: block;
+        max-width: 100%;
+        max-height: 75vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+      }
+
+      .lightbox-caption {
+        text-align: center;
+        margin-top: 16px;
+        max-width: 680px;
+      }
+
+      .lightbox-caption h3 {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 4px;
+      }
+
+      .lightbox-caption p {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+      }
+
+      .lightbox-close {
+        position: fixed;
+        top: 24px;
+        right: 28px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(30, 41, 59, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+        z-index: 10000;
+      }
+
+      .lightbox-close:hover {
+        background: var(--accent);
+        color: #0f172a;
+        transform: scale(1.08);
+      }
+
+      /* ==========================================================================
+       7. Responsive Adjustments
+       ========================================================================== */
+      @media (max-width: 768px) {
+        .slide-card {
+          height: 320px;
+        }
+        .slide-overlay {
+          padding: 18px;
+        }
+        .slide-title {
+          font-size: 1.15rem;
+        }
+        .center-mode-slider .slick-prev {
+          left: 14px;
+        }
+        .center-mode-slider .slick-next {
+          right: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="fullwidth-slider-wrapper">
+      <div class="center-mode-slider" id="heroCenterSlider">
+        <!-- Slide 1 -->
+        <div class="slide-item">
+          <div
+            class="slide-card"
+            data-full-src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=90"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1000&q=80"
+              alt="Yosemite Valley"
+            />
+            <span class="expand-badge" title="View full image">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </span>
+            <div class="slide-overlay">
+              <span class="slide-tag">01 / Nature</span>
+              <h2 class="slide-title">Yosemite Valley Dusk</h2>
+              <p class="slide-desc">
+                Granite cliffs reflecting golden hour light across the valley
+                floor.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide-item">
+          <div
+            class="slide-card"
+            data-full-src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2000&q=90"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1000&q=80"
+              alt="Starry Mountain Peak"
+            />
+            <span class="expand-badge" title="View full image">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </span>
+            <div class="slide-overlay">
+              <span class="slide-tag">02 / Alpine</span>
+              <h2 class="slide-title">Midnight Summit</h2>
+              <p class="slide-desc">
+                Crystal clear night skies illuminating snow-dusted ridges above
+                the clouds.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide-item">
+          <div
+            class="slide-card"
+            data-full-src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2000&q=90"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1000&q=80"
+              alt="Misty Forest"
+            />
+            <span class="expand-badge" title="View full image">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </span>
+            <div class="slide-overlay">
+              <span class="slide-tag">03 / Wilderness</span>
+              <h2 class="slide-title">Emerald Canopy</h2>
+              <p class="slide-desc">
+                Morning fog drifting gently through ancient evergreen valleys.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide-item">
+          <div
+            class="slide-card"
+            data-full-src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2000&q=90"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80"
+              alt="Tropical Coastline"
+            />
+            <span class="expand-badge" title="View full image">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </span>
+            <div class="slide-overlay">
+              <span class="slide-tag">04 / Coastal</span>
+              <h2 class="slide-title">Azure Horizon</h2>
+              <p class="slide-desc">
+                Calm turquoise tides meeting warm white sands under a pastel
+                sky.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide-item">
+          <div
+            class="slide-card"
+            data-full-src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2000&q=90"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80"
+              alt="Mountain Ridge"
+            />
+            <span class="expand-badge" title="View full image">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </span>
+            <div class="slide-overlay">
+              <span class="slide-tag">05 / Expedition</span>
+              <h2 class="slide-title">Highland Traverse</h2>
+              <p class="slide-desc">
+                Dramatic ridgelines stretching endlessly across untouched
+                terrain.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 6 (Added so 5-slide infinite wrap has smooth buffer) -->
+        <div class="slide-item">
+          <div
+            class="slide-card"
+            data-full-src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2000&q=90"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1000&q=80"
+              alt="Alpine Lake"
+            />
+            <span class="expand-badge" title="View full image">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </span>
+            <div class="slide-overlay">
+              <span class="slide-tag">06 / Fjord</span>
+              <h2 class="slide-title">Mirror Lake Basin</h2>
+              <p class="slide-desc">
+                Still glacial waters reflecting towering limestone peaks at
+                dawn.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide-item">
+          <div
+            class="slide-card"
+            data-full-src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=2000&q=90"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1000&q=80"
+              alt="Rolling Green Hills"
+            />
+            <span class="expand-badge" title="View full image">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            </span>
+            <div class="slide-overlay">
+              <span class="slide-tag">07 / Meadow</span>
+              <h2 class="slide-title">Solstice Pastures</h2>
+              <p class="slide-desc">
+                Sunbeams breaking through dramatic evening clouds over green
+                hills.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full-Screen Image Lightbox Modal -->
+    <div
+      class="lightbox-modal"
+      id="imageLightbox"
+      aria-hidden="true"
+      role="dialog"
+    >
+      <button
+        class="lightbox-close"
+        id="lightboxClose"
+        aria-label="Close preview"
+      >
+        &times;
+      </button>
+      <div class="lightbox-content">
+        <div class="lightbox-image-wrap">
+          <img id="lightboxImg" src="" alt="Full size preview" />
+        </div>
+        <div class="lightbox-caption">
+          <h3 id="lightboxTitle"></h3>
+          <p id="lightboxDesc"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery & Slick Slider JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"
+    ></script>
+
+    <script>
+      $(document).ready(function () {
+        try {
+          const $slider = $("#heroCenterSlider");
+          const $lightbox = $("#imageLightbox");
+          const $lightboxImg = $("#lightboxImg");
+          const $lightboxTitle = $("#lightboxTitle");
+          const $lightboxDesc = $("#lightboxDesc");
+
+          // Track drag state so dragging the carousel doesn't accidentally trigger the lightbox
+          let isDragging = false;
+
+          $slider.on("beforeChange", function () {
+            isDragging = true;
+          });
+
+          $slider.on("afterChange", function () {
+            setTimeout(function () {
+              isDragging = false;
+            }, 50);
+          });
+
+          $slider.slick({
+            centerMode: true,
+            centerPadding: "60px", // Peeking edges around the 5 centered slides
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            infinite: true,
+            speed: 500,
+            cssEase: "cubic-bezier(0.25, 1, 0.5, 1)",
+            arrows: true,
+            dots: true,
+            autoplay: true,
+            autoplaySpeed: 4000,
+            pauseOnHover: true,
+            focusOnSelect: false,
+            responsive: [
+              {
+                breakpoint: 1400,
+                settings: {
+                  slidesToShow: 3,
+                  centerPadding: "80px",
+                },
+              },
+              {
+                breakpoint: 900,
+                settings: {
+                  slidesToShow: 3,
+                  centerPadding: "40px",
+                },
+              },
+              {
+                breakpoint: 640,
+                settings: {
+                  slidesToShow: 1,
+                  centerPadding: "48px",
+                  arrows: false,
+                },
+              },
+            ],
+          });
+
+          // Open full-size image modal on slide click
+          $slider.on("click", ".slide-card", function () {
+            if (isDragging) return;
+
+            const $card = $(this);
+            const fullSrc =
+              $card.data("full-src") || $card.find("img").attr("src");
+            const title = $card.find(".slide-title").text();
+            const desc = $card.find(".slide-desc").text();
+
+            $lightboxImg.attr("src", fullSrc);
+            $lightboxTitle.text(title);
+            $lightboxDesc.text(desc);
+
+            $lightbox.addClass("is-open").attr("aria-hidden", "false");
+            $slider.slick("slickPause");
+          });
+
+          // Close modal helper
+          function closeLightbox() {
+            $lightbox.removeClass("is-open").attr("aria-hidden", "true");
+            $slider.slick("slickPlay");
+            setTimeout(function () {
+              $lightboxImg.attr("src", "");
+            }, 300);
+          }
+
+          // Close on X button, backdrop click, or Escape key
+          $("#lightboxClose").on("click", closeLightbox);
+
+          $lightbox.on("click", function (e) {
+            if (e.target === this) {
+              closeLightbox();
+            }
+          });
+
+          $(document).on("keydown", function (e) {
+            if (e.key === "Escape" && $lightbox.hasClass("is-open")) {
+              closeLightbox();
+            }
+          });
+        } catch (error) {
+          console.error(
+            "Failed to initialize Slick Slider or Lightbox:",
+            error,
+          );
+        }
+      });
+    </script>
+  </body>
+</html>
