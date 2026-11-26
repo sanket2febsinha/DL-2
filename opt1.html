@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LUMIÈRE — Curated Luxury Gallery</title>
+    <!-- Bootstrap 5.3 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts: Cormorant Garamond for luxury serif headings, Inter for clean UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+      :root {
+        --gold-300: #f3e5ab;
+        --gold-400: #e5c158;
+        --gold-500: #d4af37;
+        --gold-600: #aa8c2c;
+        --obsidian: #0a0a0c;
+      }
+
+      html {
+        overflow: hidden;
+      }
+
+      body {
+        background-color: var(--obsidian);
+        color: #f5f5f4;
+        font-family: "Inter", sans-serif;
+        overflow: hidden;
+        user-select: none;
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+      }
+
+      .font-serif-luxury {
+        font-family: "Cormorant Garamond", Georgia, serif;
+      }
+
+      .text-gold-300 {
+        color: var(--gold-300) !important;
+      }
+      .text-gold-400 {
+        color: var(--gold-400) !important;
+      }
+      .bg-gold-400 {
+        background-color: var(--gold-400) !important;
+      }
+
+      /* Vignette & Gradient Overlays */
+      .overlay-gradient-vertical {
+        pointer-events: none;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.9) 0%,
+          rgba(0, 0, 0, 0.2) 50%,
+          rgba(0, 0, 0, 0.6) 100%
+        );
+        z-index: 10;
+      }
+
+      .overlay-gradient-radial {
+        pointer-events: none;
+        background: radial-gradient(
+          circle,
+          transparent 40%,
+          rgba(0, 0, 0, 0.45) 100%
+        );
+        z-index: 10;
+      }
+
+      /* Brand Emblem & Glass Controls */
+      .brand-emblem {
+        width: 2.1rem;
+        height: 2.1rem;
+        border: 1px solid rgba(212, 175, 55, 0.6);
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(12px);
+      }
+
+      .brand-title {
+        letter-spacing: 0.25em;
+        font-size: 1.15rem;
+      }
+
+      .brand-subtitle {
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: rgba(229, 193, 88, 0.85);
+      }
+
+      .glass-counter {
+        background: #000000;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        letter-spacing: 0.15em;
+        display: none;
+      }
+
+      .glass-icon-btn {
+        width: 2.75rem;
+        height: 2.75rem;
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #e7e5e4;
+        transition: all 0.3s ease;
+      }
+
+      .glass-icon-btn:hover {
+        background: rgba(255, 255, 255, 0.16);
+        border-color: rgba(229, 193, 88, 0.5);
+        color: var(--gold-400);
+      }
+
+      /* Side Navigation Arrows */
+      .nav-arrow-btn {
+        width: 3rem;
+        height: 3rem;
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #e7e5e4;
+        z-index: 30;
+        transition: all 0.3s ease;
+      }
+
+      @media (min-width: 768px) {
+        .nav-arrow-btn {
+          width: 3.4rem;
+          height: 3.4rem;
+        }
+      }
+
+      .nav-arrow-btn:hover {
+        background: rgba(0, 0, 0, 0.65);
+        border-color: rgba(229, 193, 88, 0.55);
+        color: var(--gold-400);
+      }
+
+      /* Slides & Ken Burns Zoom */
+      .slide-item {
+        transition: opacity 1s ease-in-out;
+      }
+
+      .slide-item img {
+        object-fit: cover;
+        object-position: center;
+        transition: transform 8s ease-out;
+      }
+
+      .slide-zoom-active {
+        transform: scale(1.05);
+      }
+
+      .slide-zoom-reset {
+        transform: scale(1);
+      }
+
+      /* Editorial Caption Transitions */
+      .caption-box {
+        max-width: 42rem;
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+
+      .caption-hidden {
+        opacity: 0;
+        transform: translateY(0.75rem);
+      }
+
+      .caption-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .location-line {
+        height: 1px;
+        width: 2rem;
+        background-color: var(--gold-400);
+      }
+
+      .location-label {
+        font-size: 0.78rem;
+        letter-spacing: 0.25em;
+      }
+
+      .slide-heading {
+        font-size: clamp(1.85rem, 3.8vw, 3.15rem);
+        line-height: 1.15;
+        letter-spacing: 0.02em;
+      }
+
+      .slide-description {
+        color: rgba(214, 211, 209, 0.9);
+        font-weight: 300;
+        line-height: 1.65;
+        max-width: 36rem;
+      }
+
+      /* Dock Prev / Next Pills */
+      .dock-pill-btn {
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #e7e5e4;
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        transition: all 0.3s ease;
+      }
+
+      .dock-pill-btn:hover {
+        background: rgba(255, 255, 255, 0.16);
+        border-color: rgba(229, 193, 88, 0.5);
+        color: var(--gold-400);
+      }
+
+      /* Thumbnail Filmstrip */
+      .thumbnails-strip {
+        max-width: 90vw;
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(229, 193, 88, 0.4) rgba(255, 255, 255, 0.05);
+        overflow: hidden !important;
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+
+      @media (min-width: 992px) {
+        .thumbnails-strip {
+          max-width: 44vw;
+        }
+      }
+
+      .thumbnails-strip::-webkit-scrollbar {
+        height: 4px;
+      }
+
+      .thumbnails-strip::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 999px;
+      }
+
+      .thumbnails-strip::-webkit-scrollbar-thumb {
+        background: rgba(229, 193, 88, 0.45);
+        border-radius: 999px;
+      }
+
+      .thumb-item {
+        width: 3.5rem;
+        height: 2.5rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.15);
+        opacity: 0.5;
+        flex-shrink: 0;
+        padding: 0;
+        background: transparent;
+        transition: all 0.3s ease;
+      }
+
+      @media (min-width: 576px) {
+        .thumb-item {
+          width: 5rem;
+          height: 3rem;
+        }
+      }
+
+      .thumb-item:hover {
+        opacity: 0.9;
+        border-color: rgba(255, 255, 255, 0.45);
+      }
+
+      .thumb-item.active {
+        border-color: var(--gold-400);
+        transform: scale(1.05);
+        box-shadow: 0 6px 18px rgba(212, 175, 55, 0.25);
+        opacity: 1;
+      }
+
+      /* Bottom Progress Bar */
+      .progress-track {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        z-index: 40;
+      }
+
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(
+          90deg,
+          var(--gold-600),
+          var(--gold-400),
+          var(--gold-300)
+        );
+      }
+
+      /* Toast Notification */
+      .luxury-toast {
+        top: 6rem;
+        z-index: 50;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        color: var(--gold-300);
+        font-size: 0.72rem;
+        letter-spacing: 0.2em;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .luxury-toast.show {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main Slideshow Container -->
+    <main
+      id="slideshow-container"
+      class="position-relative w-100 h-100 overflow-hidden"
+    >
+      <!-- Slides Wrapper (Populated via JS) -->
+      <div id="slides-wrapper" class="position-relative w-100 h-100"></div>
+
+      <!-- Subtle Vignette & Gradient Overlays for Legibility -->
+      <div
+        class="overlay-gradient-vertical position-absolute top-0 start-0 end-0 bottom-0"
+      ></div>
+      <div
+        class="overlay-gradient-radial position-absolute top-0 start-0 end-0 bottom-0"
+      ></div>
+
+      <!-- Top Navigation Bar -->
+      <header
+        class="position-absolute top-0 start-0 end-0 z-3 d-flex align-items-center justify-content-between px-4 py-3 px-md-5 py-md-4"
+        style="z-index: 30"
+      >
+        <!-- Brand Logo -->
+        <div class="d-flex align-items-center gap-3" style="opacity: 0">
+          <div
+            class="brand-emblem rounded-circle d-flex align-items-center justify-content-center"
+          >
+            <span class="font-serif-luxury text-gold-400 fs-5 fw-semibold"
+              >L</span
+            >
+          </div>
+          <div>
+            <h1
+              class="font-serif-luxury brand-title fw-semibold text-white text-uppercase mb-0"
+            >
+              Lumière
+            </h1>
+            <p class="brand-subtitle text-uppercase mb-0 d-none d-sm-block">
+              Private Collection
+            </p>
+          </div>
+        </div>
+
+        <!-- Slide Counter & Controls -->
+        <div class="d-flex align-items-center gap-2 gap-md-3">
+          <!-- Editorial Counter -->
+          <div
+            class="glass-counter font-serif-luxury fs-5 px-3 py-1 rounded-pill text-light"
+          >
+            <span id="current-index" class="text-gold-400 fw-semibold">01</span>
+            <span class="text-secondary mx-1">/</span>
+            <span id="total-slides" class="text-secondary fs-6">25</span>
+          </div>
+
+          <!-- Autoplay Toggle Button -->
+          <button
+            id="autoplay-btn"
+            aria-label="Toggle Autoplay"
+            class="btn glass-icon-btn rounded-circle d-flex align-items-center justify-content-center p-0"
+          >
+            <i
+              id="autoplay-icon"
+              data-lucide="pause"
+              style="width: 18px; height: 18px"
+            ></i>
+          </button>
+
+          <!-- Fullscreen Toggle Button -->
+          <button
+            id="fullscreen-btn"
+            aria-label="Toggle Fullscreen"
+            class="btn glass-icon-btn rounded-circle d-none d-sm-flex align-items-center justify-content-center p-0"
+          >
+            <i
+              id="fullscreen-icon"
+              data-lucide="maximize"
+              style="width: 18px; height: 18px"
+            ></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Left / Right Navigation Arrows -->
+      <button
+        id="prev-btn"
+        aria-label="Previous Slide"
+        class="btn nav-arrow-btn rounded-circle position-absolute top-50 start-0 translate-middle-y ms-3 ms-md-5 d-flex align-items-center justify-content-center p-0"
+      >
+        <i data-lucide="chevron-left" style="width: 22px; height: 22px"></i>
+      </button>
+
+      <button
+        id="next-btn"
+        aria-label="Next Slide"
+        class="btn nav-arrow-btn rounded-circle position-absolute top-50 end-0 translate-middle-y me-3 me-md-5 d-flex align-items-center justify-content-center p-0"
+      >
+        <i data-lucide="chevron-right" style="width: 22px; height: 22px"></i>
+      </button>
+
+      <!-- Bottom Editorial Caption & Filmstrip Dock -->
+      <footer
+        class="position-absolute bottom-0 start-0 end-0 px-4 pb-4 pt-5 px-md-5 pb-md-5 d-flex flex-column flex-lg-row align-items-lg-end justify-content-between gap-4"
+        style="z-index: 30"
+      >
+        <!-- Active Slide Metadata -->
+        <div id="caption-container" class="caption-box caption-visible">
+          <div class="d-flex align-items-center gap-3 mb-2">
+            <span class="location-line d-inline-block"></span>
+            <span
+              id="slide-location"
+              class="location-label text-uppercase text-gold-400 fw-medium"
+              >Lake Como, Italy</span
+            >
+          </div>
+          <h2
+            id="slide-title"
+            class="font-serif-luxury slide-heading text-white fw-normal mb-2 mb-md-3"
+          >
+            Villa Balbiano Sanctuary
+          </h2>
+          <p id="slide-desc" class="slide-description small mb-0">
+            Sixteenth-century Italian grandeur overlooking the tranquil waters
+            of Lake Como, framed by manicured cypress gardens and timeless
+            neoclassical marble.
+          </p>
+        </div>
+
+        <!-- Interactive Thumbnail Filmstrip & Next/Prev Pill Controls -->
+        <div
+          class="d-flex flex-column align-items-start align-items-lg-end gap-3"
+          style="overflow: hidden"
+        >
+          <div class="d-flex align-items-center gap-2">
+            <button
+              id="dock-prev-btn"
+              aria-label="Previous Image"
+              class="btn dock-pill-btn rounded-pill px-3 py-1 d-flex align-items-center gap-2 text-uppercase"
+            >
+              <i data-lucide="arrow-left" style="width: 14px; height: 14px"></i>
+              <span>Prev</span>
+            </button>
+            <button
+              id="dock-next-btn"
+              aria-label="Next Image"
+              class="btn dock-pill-btn rounded-pill px-3 py-1 d-flex align-items-center gap-2 text-uppercase"
+            >
+              <span>Next</span>
+              <i
+                data-lucide="arrow-right"
+                style="width: 14px; height: 14px"
+              ></i>
+            </button>
+          </div>
+          <div
+            id="thumbnails-container"
+            class="thumbnails-strip d-flex align-items-center gap-2 pb-1 overflow-x-auto"
+          >
+            <!-- Thumbnails injected via JS -->
+          </div>
+        </div>
+      </footer>
+
+      <!-- Bottom Progress Bar -->
+      <div class="progress-track position-absolute bottom-0 start-0 end-0">
+        <div id="progress-bar" class="progress-fill"></div>
+      </div>
+
+      <!-- Custom Notification Toast -->
+      <div
+        id="toast-msg"
+        class="luxury-toast position-fixed start-50 translate-middle-x px-4 py-2 rounded-pill text-uppercase"
+      >
+        Notification
+      </div>
+    </main>
+
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      /**
+       * Curated 25-Image Luxury Photography Dataset
+       */
+      const slidesData = [
+        {
+          id: 1,
+          location: "Lake Como, Italy",
+          title: "Villa Balbiano Sanctuary",
+          description:
+            "Sixteenth-century Italian grandeur overlooking the tranquil waters of Lake Como, framed by manicured cypress gardens and timeless neoclassical marble.",
+          image:
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Villa+Balbiano+Sanctuary",
+        },
+        {
+          id: 2,
+          location: "Amangiri, Utah",
+          title: "Desert Monolith Pavilion",
+          description:
+            "Minimalist concrete and natural stone architecture seamlessly carved into the ancient crimson canyons of the American Southwest.",
+          image:
+            "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Desert+Monolith+Pavilion",
+        },
+        {
+          id: 3,
+          location: "Santorini, Greece",
+          title: "Caldera Infinity Horizon",
+          description:
+            "Sculpted whitewashed terraces suspended high above the Aegean Sea, where golden hour light melts into private cliffside waters.",
+          image:
+            "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2071&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Caldera+Infinity+Horizon",
+        },
+        {
+          id: 4,
+          location: "Zermatt, Switzerland",
+          title: "Alpine Timber & Glass Chalet",
+          description:
+            "Warm reclaimed larch wood meets floor-to-ceiling panoramic glass, offering unobstructed views of snow-dusted Matterhorn peaks.",
+          image:
+            "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=2065&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Alpine+Timber+Chalet",
+        },
+        {
+          id: 5,
+          location: "Kyoto, Japan",
+          title: "Arashiyama Zen Courtyard",
+          description:
+            "Serene cedar pavilions surrounded by raked gravel gardens, moss-covered stones, and tranquil koi ponds steeped in centuries of tradition.",
+          image:
+            "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Arashiyama+Zen+Courtyard",
+        },
+        {
+          id: 6,
+          location: "Baa Atoll, Maldives",
+          title: "Overwater Coral Residence",
+          description:
+            "Private teakwood decks floating above crystal turquoise lagoons, crafted for effortless solitude under endless starlit skies.",
+          image:
+            "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?auto=format&fit=crop&w=2074&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Overwater+Coral+Residence",
+        },
+        {
+          id: 7,
+          location: "Paris, France",
+          title: "Hôtel Particulier Salon",
+          description:
+            "Haussmannian gilded moldings, herringbone oak parquet, and velvet furnishings bathed in soft Parisian morning light.",
+          image:
+            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2053&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Hotel+Particulier+Salon",
+        },
+        {
+          id: 8,
+          location: "Ubud, Bali",
+          title: "Emerald Canopy Sanctuary",
+          description:
+            "Cantilevered volcanic stone infinity pools suspended above misty tropical rainforest ravines and terraced rice paddies.",
+          image:
+            "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=2038&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Emerald+Canopy+Sanctuary",
+        },
+        {
+          id: 9,
+          location: "Serengeti, Tanzania",
+          title: "Savannah Glass Pavilion",
+          description:
+            "Canvas and sustainably harvested mahogany suites opening onto golden acacia plains under vast East African horizons.",
+          image:
+            "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Savannah+Glass+Pavilion",
+        },
+        {
+          id: 10,
+          location: "Côte d'Azur, France",
+          title: "Cap-Ferrat Limestone Villa",
+          description:
+            "Sun-drenched Mediterranean terraces framed by fragrant maritime pines, travertine colonnades, and azure Riviera waters.",
+          image:
+            "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2075&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Cap-Ferrat+Limestone+Villa",
+        },
+        {
+          id: 11,
+          location: "Positano, Italy",
+          title: "Amalfi Cliffside Palazzo",
+          description:
+            "Sun-kissed pastel loggias cascading down vertical coastal cliffs above private yacht anchorages on the Tyrrhenian Sea.",
+          image:
+            "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Amalfi+Cliffside+Palazzo",
+        },
+        {
+          id: 12,
+          location: "Aspen, Colorado",
+          title: "Elk Mountain Glass Estate",
+          description:
+            "Modernist steel, cedar, and fieldstone residence nestled among golden autumn aspens and pristine Rocky Mountain powder.",
+          image:
+            "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?auto=format&fit=crop&w=2065&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Elk+Mountain+Glass+Estate",
+        },
+        {
+          id: 13,
+          location: "Reykjavik, Iceland",
+          title: "Aurora Geothermal Retreat",
+          description:
+            "Dark basalt pavilions beside mineral-rich blue thermal waters beneath dancing emerald northern lights.",
+          image:
+            "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Aurora+Geothermal+Retreat",
+        },
+        {
+          id: 14,
+          location: "Dubai, UAE",
+          title: "Al Maha Desert Oasis",
+          description:
+            "Private temperature-controlled plunge pools overlooking undulating golden Arabian dunes and native gazelle reserves.",
+          image:
+            "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Al+Maha+Desert+Oasis",
+        },
+        {
+          id: 15,
+          location: "Bora Bora, French Polynesia",
+          title: "Mount Otemanu Lagoon Suite",
+          description:
+            "Thatched-roof overwater villas framed by vibrant coral gardens and the dramatic volcanic silhouette of Mount Otemanu.",
+          image:
+            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2073&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Mount+Otemanu+Lagoon+Suite",
+        },
+        {
+          id: 16,
+          location: "Udaipur, India",
+          title: "Lake Pichola Marble Palace",
+          description:
+            "Hand-carved white Makrana marble arches, mirrored courtyards, and serene lotus pools floating across royal waters.",
+          image:
+            "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Lake+Pichola+Marble+Palace",
+        },
+        {
+          id: 17,
+          location: "Manhattan, New York",
+          title: "Billionaires' Row Sky Penthouse",
+          description:
+            "Double-height bronze and glass interiors commanding sweeping twilight panoramas over Central Park and the Hudson.",
+          image:
+            "https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Billionaires+Row+Sky+Penthouse",
+        },
+        {
+          id: 18,
+          location: "St. Barts, Caribbean",
+          title: "Gustavia Hillside Sanctuary",
+          description:
+            "Breezy open-air Caribbean teak pavilions with vanishing-edge pools gazing across superyacht harbors at sunset.",
+          image:
+            "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=2074&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Gustavia+Hillside+Sanctuary",
+        },
+        {
+          id: 19,
+          location: "Marrakech, Morocco",
+          title: "Palmeraie Royal Riad",
+          description:
+            "Intricate zellij mosaic fountains, carved cedarwood colonnades, and candlelit orange-blossom courtyards.",
+          image:
+            "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Palmeraie+Royal+Riad",
+        },
+        {
+          id: 20,
+          location: "Queenstown, New Zealand",
+          title: "Lake Wakatipu Alpine Lodge",
+          description:
+            "Schist stone and native timber architecture anchored along glacier-fed waters beneath the jagged Remarkables range.",
+          image:
+            "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Lake+Wakatipu+Alpine+Lodge",
+        },
+        {
+          id: 21,
+          location: "Tuscany, Italy",
+          title: "Val d'Orcia Cypress Estate",
+          description:
+            "Restored seventeenth-century stone farmhouse surrounded by rolling golden vineyards, olive groves, and mist-veiled hills.",
+          image:
+            "https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Val+dOrcia+Cypress+Estate",
+        },
+        {
+          id: 22,
+          location: "Patagonia, Chile",
+          title: "Torres del Paine Glass Eco-Villa",
+          description:
+            "Architectural lenga-wood sanctuary framing dramatic granite spires, turquoise glacial lakes, and untamed southern winds.",
+          image:
+            "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Torres+del+Paine+Eco+Villa",
+        },
+        {
+          id: 23,
+          location: "Mallorca, Spain",
+          title: "Tramuntana Limestone Finca",
+          description:
+            "Sun-bleached stone courtyards, ancient olive trees, and cliffside infinity pools overlooking secluded Balearic coves.",
+          image:
+            "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Tramuntana+Limestone+Finca",
+        },
+        {
+          id: 24,
+          location: "Big Sur, California",
+          title: "Pacific Ridge Redwood House",
+          description:
+            "Cantilevered glass and weathered redwood retreat perched high above dramatic coastal cliffs and crashing Pacific surf.",
+          image:
+            "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Pacific+Ridge+Redwood+House",
+        },
+        {
+          id: 25,
+          location: "Niseko, Japan",
+          title: "Mount Yōtei Onsen Villa",
+          description:
+            "Minimalist hinoki cypress interiors with private outdoor volcanic hot springs overlooking serene birch forests in winter snow.",
+          image:
+            "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=2070&q=85",
+          fallback:
+            "https://placehold.co/1920x1080/141417/D4AF37?text=Mount+Yotei+Onsen+Villa",
+        },
+      ];
+
+      // Application State
+      const state = {
+        currentIndex: 0,
+        isPlaying: true,
+        slideDuration: 6500,
+        progress: 0,
+        lastTimestamp: null,
+        animationFrameId: null,
+        touchStartX: 0,
+        touchEndX: 0,
+      };
+
+      // DOM Elements
+      const slidesWrapper = document.getElementById("slides-wrapper");
+      const thumbnailsContainer = document.getElementById(
+        "thumbnails-container",
+      );
+      const currentIndexEl = document.getElementById("current-index");
+      const totalSlidesEl = document.getElementById("total-slides");
+      const slideLocationEl = document.getElementById("slide-location");
+      const slideTitleEl = document.getElementById("slide-title");
+      const slideDescEl = document.getElementById("slide-desc");
+      const captionContainer = document.getElementById("caption-container");
+      const progressBar = document.getElementById("progress-bar");
+      const autoplayBtn = document.getElementById("autoplay-btn");
+      const autoplayIcon = document.getElementById("autoplay-icon");
+      const fullscreenBtn = document.getElementById("fullscreen-btn");
+      const prevBtn = document.getElementById("prev-btn");
+      const nextBtn = document.getElementById("next-btn");
+      const dockPrevBtn = document.getElementById("dock-prev-btn");
+      const dockNextBtn = document.getElementById("dock-next-btn");
+      const toastMsg = document.getElementById("toast-msg");
+
+      /**
+       * Initializes the DOM structure for slides and thumbnails
+       */
+      function initSlideshow() {
+        try {
+          totalSlidesEl.textContent = String(slidesData.length).padStart(
+            2,
+            "0",
+          );
+
+          slidesData.forEach((slide, index) => {
+            // 1. Create Fullscreen Slide Layer
+            const slideEl = document.createElement("div");
+            slideEl.className = `slide-item position-absolute top-0 start-0 w-100 h-100 ${index === 0 ? "opacity-100 z-1" : "opacity-0 z-0"}`;
+            slideEl.dataset.index = index;
+
+            const imgEl = document.createElement("img");
+            imgEl.src = slide.image;
+            imgEl.alt = slide.title;
+            imgEl.onerror = function () {
+              this.onerror = null;
+              this.src = slide.fallback;
+            };
+            imgEl.className = `w-100 h-100 ${index === 0 ? "slide-zoom-active" : "slide-zoom-reset"}`;
+
+            slideEl.appendChild(imgEl);
+            slidesWrapper.appendChild(slideEl);
+
+            // 2. Create Thumbnail Button
+            const thumbBtn = document.createElement("button");
+            thumbBtn.ariaLabel = `View ${slide.title}`;
+            thumbBtn.className = `thumb-item ${index === 0 ? "active" : ""}`;
+            thumbBtn.dataset.index = index;
+
+            const thumbImg = document.createElement("img");
+            thumbImg.src = slide.image;
+            thumbImg.alt = `Thumbnail for ${slide.title}`;
+            thumbImg.onerror = function () {
+              this.onerror = null;
+              this.src = slide.fallback;
+            };
+            thumbImg.className = "w-100 h-100 object-fit-cover";
+
+            thumbBtn.appendChild(thumbImg);
+            thumbBtn.addEventListener("click", () => goToSlide(index));
+            thumbnailsContainer.appendChild(thumbBtn);
+          });
+
+          lucide.createIcons();
+          bindEvents();
+          startProgressLoop();
+        } catch (error) {
+          console.error("Error initializing luxury slideshow:", error);
+        }
+      }
+
+      /**
+       * Transitions to a specific slide index with smooth crossfade and caption choreography
+       */
+      function goToSlide(newIndex) {
+        if (newIndex < 0) {
+          newIndex = slidesData.length - 1;
+        } else if (newIndex >= slidesData.length) {
+          newIndex = 0;
+        }
+
+        if (newIndex === state.currentIndex) return;
+
+        const slides = document.querySelectorAll(".slide-item");
+        const thumbs = document.querySelectorAll(".thumb-item");
+
+        // Deactivate previous slide
+        const prevSlide = slides[state.currentIndex];
+        const prevImg = prevSlide.querySelector("img");
+        prevSlide.classList.remove("opacity-100", "z-1");
+        prevSlide.classList.add("opacity-0", "z-0");
+        prevImg.classList.remove("slide-zoom-active");
+        prevImg.classList.add("slide-zoom-reset");
+
+        // Update Thumbnails
+        thumbs[state.currentIndex].classList.remove("active");
+        thumbs[newIndex].classList.add("active");
+        thumbs[newIndex].scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+
+        // Activate new slide
+        const nextSlide = slides[newIndex];
+        const nextImg = nextSlide.querySelector("img");
+        nextSlide.classList.remove("opacity-0", "z-0");
+        nextSlide.classList.add("opacity-100", "z-1");
+
+        requestAnimationFrame(() => {
+          nextImg.classList.remove("slide-zoom-reset");
+          nextImg.classList.add("slide-zoom-active");
+        });
+
+        // Animate Caption Update
+        captionContainer.classList.remove("caption-visible");
+        captionContainer.classList.add("caption-hidden");
+
+        setTimeout(() => {
+          const data = slidesData[newIndex];
+          slideLocationEl.textContent = data.location;
+          slideTitleEl.textContent = data.title;
+          slideDescEl.textContent = data.description;
+          currentIndexEl.textContent = String(newIndex + 1).padStart(2, "0");
+
+          captionContainer.classList.remove("caption-hidden");
+          captionContainer.classList.add("caption-visible");
+        }, 300);
+
+        // Reset progress bar
+        state.currentIndex = newIndex;
+        state.progress = 0;
+        state.lastTimestamp = performance.now();
+        progressBar.style.width = "0%";
+      }
+
+      /**
+       * Progress Bar & Autoplay Animation Frame Loop
+       */
+      function startProgressLoop() {
+        state.lastTimestamp = performance.now();
+
+        function step(timestamp) {
+          if (state.isPlaying) {
+            const delta = timestamp - state.lastTimestamp;
+            state.progress += delta;
+
+            const percentage = Math.min(
+              (state.progress / state.slideDuration) * 100,
+              100,
+            );
+            progressBar.style.width = `${percentage}%`;
+
+            if (state.progress >= state.slideDuration) {
+              goToSlide(state.currentIndex + 1);
+            }
+          }
+          state.lastTimestamp = timestamp;
+          state.animationFrameId = requestAnimationFrame(step);
+        }
+
+        state.animationFrameId = requestAnimationFrame(step);
+      }
+
+      /**
+       * Toggle Play / Pause state
+       */
+      function toggleAutoplay() {
+        state.isPlaying = !state.isPlaying;
+        state.lastTimestamp = performance.now();
+
+        autoplayIcon.setAttribute(
+          "data-lucide",
+          state.isPlaying ? "pause" : "play",
+        );
+        lucide.createIcons();
+
+        showToast(state.isPlaying ? "Slideshow Resumed" : "Slideshow Paused");
+      }
+
+      /**
+       * Toggle Fullscreen Mode safely
+       */
+      function toggleFullscreen() {
+        try {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {
+              showToast("Fullscreen unavailable in embedded view");
+            });
+          } else {
+            if (document.exitFullscreen) {
+              document.exitFullscreen();
+            }
+          }
+        } catch (err) {
+          showToast("Fullscreen mode not supported");
+        }
+      }
+
+      /**
+       * Displays an unobtrusive luxury toast notification
+       */
+      let toastTimeout;
+      function showToast(message) {
+        toastMsg.textContent = message;
+        toastMsg.classList.add("show");
+
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toastMsg.classList.remove("show");
+        }, 2000);
+      }
+
+      /**
+       * Bind Click, Keyboard, and Touch Swipe Events
+       */
+      function bindEvents() {
+        prevBtn.addEventListener("click", () =>
+          goToSlide(state.currentIndex - 1),
+        );
+        nextBtn.addEventListener("click", () =>
+          goToSlide(state.currentIndex + 1),
+        );
+        dockPrevBtn.addEventListener("click", () =>
+          goToSlide(state.currentIndex - 1),
+        );
+        dockNextBtn.addEventListener("click", () =>
+          goToSlide(state.currentIndex + 1),
+        );
+        autoplayBtn.addEventListener("click", toggleAutoplay);
+        fullscreenBtn.addEventListener("click", toggleFullscreen);
+
+        // Keyboard Navigation
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowRight") {
+            goToSlide(state.currentIndex + 1);
+          } else if (e.key === "ArrowLeft") {
+            goToSlide(state.currentIndex - 1);
+          } else if (e.key === " ") {
+            e.preventDefault();
+            toggleAutoplay();
+          }
+        });
+
+        // Touch Swipe Support for Mobile & Tablet
+        const container = document.getElementById("slideshow-container");
+        container.addEventListener(
+          "touchstart",
+          (e) => {
+            state.touchStartX = e.changedTouches[0].screenX;
+          },
+          { passive: true },
+        );
+
+        container.addEventListener(
+          "touchend",
+          (e) => {
+            state.touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+          },
+          { passive: true },
+        );
+      }
+
+      function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = state.touchStartX - state.touchEndX;
+
+        if (Math.abs(diff) > swipeThreshold) {
+          if (diff > 0) {
+            goToSlide(state.currentIndex + 1);
+          } else {
+            goToSlide(state.currentIndex - 1);
+          }
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", initSlideshow);
+    </script>
+  </body>
+</html>

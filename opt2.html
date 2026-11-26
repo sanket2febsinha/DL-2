@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina — Bootstrap Parallax Gallery</title>
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* Ultra-Modern Luxury Variables */
+        :root {
+            --bg-obsidian: #050507;
+            --surface-velvet: #0b0c10;
+            --champagne: #dfc178;
+            --champagne-glow: rgba(223, 193, 120, 0.16);
+            --hairline: rgba(223, 193, 120, 0.22);
+            --text-ivory: #f9f7f2;
+            --text-stone: #8f8b84;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-obsidian);
+            background-image: 
+                radial-gradient(ellipse 80% 45% at 50% -10%, rgba(223, 193, 120, 0.08), transparent),
+                radial-gradient(circle at 85% 60%, rgba(223, 193, 120, 0.03), transparent 45%);
+            color: var(--text-ivory);
+            overflow-x: hidden;
+            letter-spacing: 0.02em;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Subtle Architectural Film Grain Overlay */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        h1, h2, h3, h4, h5, .serif-font {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+
+        .eyebrow-label {
+            color: var(--champagne);
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.34em;
+            text-transform: uppercase;
+        }
+
+        .luxury-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--hairline), transparent);
+        }
+
+        /* Minimalist Glassmorphic Filter Bar */
+        .filter-dock {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            padding: 0.35rem;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 999px;
+        }
+
+        .filter-btn {
+            border-radius: 999px;
+            padding: 0.5rem 1.35rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+            color: var(--text-stone);
+            background: transparent;
+            transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .filter-btn:hover {
+            color: var(--text-ivory);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #ebd294 0%, #c8a24b 100%);
+            color: #050507;
+            font-weight: 600;
+            box-shadow: 0 6px 20px -4px rgba(223, 193, 120, 0.45);
+        }
+
+        /* Editorial Staggered Rhythm on Large Screens */
+        @media (min-width: 992px) {
+            #gallery-grid-1 .gallery-item:nth-child(3n+2) {
+                transform: translateY(2.25rem);
+            }
+            #gallery-grid-1 {
+                padding-bottom: 2.25rem;
+            }
+        }
+
+        /* Gallery Cards with Ambient Spotlight & Depth Parallax */
+        .gallery-card {
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: var(--surface-velvet);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            cursor: pointer;
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.5s ease,
+                        box-shadow 0.7s ease;
+        }
+
+        /* Interactive Cursor Radial Sheen */
+        .gallery-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(223, 193, 120, 0.14), transparent 45%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .gallery-card:hover::after {
+            opacity: 1;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--hairline);
+            box-shadow: 0 32px 64px -16px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(223, 193, 120, 0.14);
+        }
+
+        .img-wrapper {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4 / 5;
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 122%; /* Generous headroom for smooth inertia parallax */
+            object-fit: cover;
+            filter: contrast(1.03) brightness(0.95);
+            transition: filter 0.7s ease;
+            will-change: transform;
+        }
+
+        .gallery-card:hover img {
+            filter: contrast(1.07) brightness(1.02);
+        }
+
+        /* Sleek Floating Glass Caption Panel */
+        .card-hover-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(5, 5, 7, 0.92) 0%, rgba(5, 5, 7, 0.25) 48%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+            z-index: 2;
+        }
+
+        .glass-caption-box {
+            background: rgba(11, 12, 16, 0.55);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            padding: 1.1rem 1.25rem;
+            transform: translateY(8px);
+            opacity: 0.92;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-card:hover .glass-caption-box {
+            transform: translateY(0);
+            opacity: 1;
+            border-color: rgba(223, 193, 120, 0.28);
+            background: rgba(11, 12, 16, 0.78);
+        }
+
+        .plate-badge {
+            position: absolute;
+            top: 1.15rem;
+            left: 1.15rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            background: rgba(5, 5, 7, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--champagne);
+            letter-spacing: 0.06em;
+            z-index: 3;
+        }
+
+        .category-tag {
+            color: var(--champagne);
+            font-size: 0.64rem;
+            letter-spacing: 0.26em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .expand-icon {
+            position: absolute;
+            top: 1.15rem;
+            right: 1.15rem;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(5, 5, 7, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-ivory);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 3;
+        }
+
+        .gallery-card:hover .expand-icon {
+            background: var(--champagne);
+            color: #050507;
+            border-color: var(--champagne);
+            transform: rotate(90deg) scale(1.06);
+        }
+
+        /* Ultra-Luxury Lightbox Modal */
+        .modal-backdrop.show {
+            opacity: 0.92;
+            background-color: #020203;
+        }
+
+        .modal-content {
+            background: rgba(11, 12, 16, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--hairline);
+            border-radius: 8px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.98);
+        }
+
+        .lightbox-img {
+            max-height: 75vh;
+            width: 100%;
+            object-fit: contain;
+            background: #040406;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .lightbox-nav-btn {
+            width: 46px;
+            height: 46px;
+            background: rgba(5, 5, 7, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--hairline);
+            color: var(--champagne);
+            transition: all 0.35s ease;
+        }
+
+        .lightbox-nav-btn:hover {
+            background: var(--champagne);
+            color: #050507;
+            border-color: var(--champagne);
+            transform: translateY(-50%) scale(1.08) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Primary Gallery Section (Full-Width Editorial Exhibition) -->
+    <section id="gallery-one" class="py-5">
+        <div class="container-fluid px-3 px-md-5 pt-2">
+            <!-- Editorial Section Header & Glass Filter Dock -->
+            <div class="row align-items-end mb-5 pb-4 border-bottom border-secondary border-opacity-10 g-4">
+                <div class="col-lg-6">
+                    <p class="eyebrow-label mb-2">Maison Lumina &bull; Curated Archive I</p>
+                    <h2 class="display-3 mb-0 text-white" style="line-height: 1.05;">
+                        Atmospheric <span class="fst-italic" style="color: var(--champagne);">Perspectives</span>
+                    </h2>
+                </div>
+                <div class="col-lg-6 d-flex justify-content-lg-end">
+                    <div class="filter-dock">
+                        <button class="filter-btn active" data-filter="all">All Plates</button>
+                        <button class="filter-btn" data-filter="nature">Nature</button>
+                        <button class="filter-btn" data-filter="architecture">Architecture</button>
+                        <button class="filter-btn" data-filter="ocean">Ocean</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bootstrap Full-Width Staggered Responsive Grid -->
+            <div class="row g-4 g-xl-5" id="gallery-grid-1">
+                <!-- Gallery Item 1 -->
+                <div class="col-12 col-sm-6 col-lg-4 gallery-item" data-category="nature">
+                    <div class="gallery-card" onclick="openLightbox(0)">
+                        <div class="img-wrapper">
+                            <span class="plate-badge">Plate No. 01</span>
+                            <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=900&q=80" 
+                                 onerror="this.src='https://placehold.co/800x1000/0b0c10/dfc178?text=Emerald+Valley'" 
+                                 alt="Emerald Valley Mist" class="parallax-img">
+                            <div class="expand-icon"><i class="bi bi-plus-lg"></i></div>
+                            <div class="card-hover-overlay">
+                                <div class="glass-caption-box">
+                                    <span class="category-tag d-block mb-1">Nature</span>
+                                    <h4 class="serif-font text-white fs-3 mb-1">Emerald Valley Mist</h4>
+                                    <p class="small text-white-50 fw-light mb-0">Scottish Highlands &bull; Edition of 15</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 2 -->
+                <div class="col-12 col-sm-6 col-lg-4 gallery-item" data-category="architecture">
+                    <div class="gallery-card" onclick="openLightbox(1)">
+                        <div class="img-wrapper">
+                            <span class="plate-badge">Plate No. 02</span>
+                            <img src="https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=900&q=80" 
+                                 onerror="this.src='https://placehold.co/800x1000/0b0c10/dfc178?text=Solaris+Pavilion'" 
+                                 alt="Solaris Glass Pavilion" class="parallax-img">
+                            <div class="expand-icon"><i class="bi bi-plus-lg"></i></div>
+                            <div class="card-hover-overlay">
+                                <div class="glass-caption-box">
+                                    <span class="category-tag d-block mb-1">Architecture</span>
+                                    <h4 class="serif-font text-white fs-3 mb-1">Solaris Glass Pavilion</h4>
+                                    <p class="small text-white-50 fw-light mb-0">Copenhagen, Denmark &bull; Edition of 10</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 3 -->
+                <div class="col-12 col-sm-6 col-lg-4 gallery-item" data-category="ocean">
+                    <div class="gallery-card" onclick="openLightbox(2)">
+                        <div class="img-wrapper">
+                            <span class="plate-badge">Plate No. 03</span>
+                            <img src="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=900&q=80" 
+                                 onerror="this.src='https://placehold.co/800x1000/0b0c10/dfc178?text=Azure+Tide'" 
+                                 alt="Azure Tide Rhythms" class="parallax-img">
+                            <div class="expand-icon"><i class="bi bi-plus-lg"></i></div>
+                            <div class="card-hover-overlay">
+                                <div class="glass-caption-box">
+                                    <span class="category-tag d-block mb-1">Ocean</span>
+                                    <h4 class="serif-font text-white fs-3 mb-1">Azure Tide Rhythms</h4>
+                                    <p class="small text-white-50 fw-light mb-0">Amalfi Coast, Italy &bull; Edition of 12</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 4 -->
+                <div class="col-12 col-sm-6 col-lg-4 gallery-item" data-category="nature">
+                    <div class="gallery-card" onclick="openLightbox(3)">
+                        <div class="img-wrapper">
+                            <span class="plate-badge">Plate No. 04</span>
+                            <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=900&q=80" 
+                                 onerror="this.src='https://placehold.co/800x1000/0b0c10/dfc178?text=Alpine+Ridge'" 
+                                 alt="Sunlit Alpine Ridge" class="parallax-img">
+                            <div class="expand-icon"><i class="bi bi-plus-lg"></i></div>
+                            <div class="card-hover-overlay">
+                                <div class="glass-caption-box">
+                                    <span class="category-tag d-block mb-1">Nature</span>
+                                    <h4 class="serif-font text-white fs-3 mb-1">Sunlit Alpine Ridge</h4>
+                                    <p class="small text-white-50 fw-light mb-0">Dolomites, Italy &bull; Edition of 15</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 5 -->
+                <div class="col-12 col-sm-6 col-lg-4 gallery-item" data-category="architecture">
+                    <div class="gallery-card" onclick="openLightbox(4)">
+                        <div class="img-wrapper">
+                            <span class="plate-badge">Plate No. 05</span>
+                            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80" 
+                                 onerror="this.src='https://placehold.co/800x1000/0b0c10/dfc178?text=Monolith+Spire'" 
+                                 alt="Monolith Reflections" class="parallax-img">
+                            <div class="expand-icon"><i class="bi bi-plus-lg"></i></div>
+                            <div class="card-hover-overlay">
+                                <div class="glass-caption-box">
+                                    <span class="category-tag d-block mb-1">Architecture</span>
+                                    <h4 class="serif-font text-white fs-3 mb-1">Monolith Reflections</h4>
+                                    <p class="small text-white-50 fw-light mb-0">Tokyo, Japan &bull; Edition of 8</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 6 -->
+                <div class="col-12 col-sm-6 col-lg-4 gallery-item" data-category="ocean">
+                    <div class="gallery-card" onclick="openLightbox(5)">
+                        <div class="img-wrapper">
+                            <span class="plate-badge">Plate No. 06</span>
+                            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80" 
+                                 onerror="this.src='https://placehold.co/800x1000/0b0c10/dfc178?text=Coral+Horizon'" 
+                                 alt="Coral Horizon Dusk" class="parallax-img">
+                            <div class="expand-icon"><i class="bi bi-plus-lg"></i></div>
+                            <div class="card-hover-overlay">
+                                <div class="glass-caption-box">
+                                    <span class="category-tag d-block mb-1">Ocean</span>
+                                    <h4 class="serif-font text-white fs-3 mb-1">Coral Horizon Dusk</h4>
+                                    <p class="small text-white-50 fw-light mb-0">Maldives Atoll &bull; Edition of 10</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container-fluid px-3 px-md-5 my-3"><div class="luxury-divider"></div></div>
+
+    <!-- Secondary Spotlight Section (Full-Width Asymmetric Monograph) -->
+    <section id="gallery-two" class="py-5">
+        <div class="container-fluid px-3 px-md-5 pb-4">
+            <div class="row align-items-end mb-5 g-3">
+                <div class="col-lg-7">
+                    <p class="eyebrow-label mb-2">Signature Monograph &bull; Archive II</p>
+                    <h2 class="display-3 text-white mb-0" style="line-height: 1.05;">
+                        Nocturne &amp; <span class="fst-italic" style="color: var(--champagne);">Elements</span>
+                    </h2>
+                </div>
+                <div class="col-lg-5 text-lg-end">
+                    <p class="text-secondary fw-light mb-0 ms-lg-auto" style="max-width: 440px;">
+                        A study in chiaroscuro—balancing nocturnal stillness, glacial stone, and quiet architectural sanctuary.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row g-4 g-xl-5">
+                <!-- Wide Masterwork Card -->
+                <div class="col-12 col-lg-8">
+                    <div class="gallery-card h-100" onclick="openLightbox(6)">
+                        <div class="img-wrapper h-100" style="aspect-ratio: 16/10;">
+                            <span class="plate-badge">Plate No. 07 &mdash; Masterwork</span>
+                            <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1400&q=85" 
+                                 onerror="this.src='https://placehold.co/1200x750/0b0c10/dfc178?text=Starlight+Summit'" 
+                                 alt="Starlight Over the Summit" class="parallax-img">
+                            <div class="expand-icon"><i class="bi bi-plus-lg"></i></div>
+                            <div class="card-hover-overlay">
+                                <div class="glass-caption-box">
+                                    <span class="category-tag d-block mb-1">Featured Expedition</span>
+                                    <h3 class="serif-font text-white fs-2 mb-1">Starlight Over the Summit</h3>
+                                    <p class="small text-white-50 fw-light mb-0">Zermatt, Switzerland &bull; 35mm f/1.4 &bull; Edition of 5</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tall Side Card -->
+                <div class="col-12 col-lg-4">
+                    <div class="gallery-card h-100" onclick="openLightbox(7)">
+                        <div class="img-wrapper h-100" style="aspect-ratio: 4/5;">
+                            <span class="plate-badge">Plate No. 08</span>
+                            <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=85" 
+                                 onerror="this.src='https://placehold.co/800x1000/0b0c10/dfc178?text=Nordic+Sanctuary'" 
+                                 alt="Nordic Timber Sanctuary" class="parallax-img">
+                            <div class="expand-icon"><i class="bi bi-plus-lg"></i></div>
+                            <div class="card-hover-overlay">
+                                <div class="glass-caption-box">
+                                    <span class="category-tag d-block mb-1">Interior &amp; Light</span>
+                                    <h3 class="serif-font text-white fs-2 mb-1">Nordic Timber Sanctuary</h3>
+                                    <p class="small text-white-50 fw-light mb-0">Oslo, Norway &bull; Edition of 10</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap Collector Lightbox Modal -->
+    <div class="modal fade" id="lightboxModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-2 px-4 pt-4">
+                    <div>
+                        <span id="modalCategory" class="category-tag d-block mb-1">Category</span>
+                        <h4 class="modal-title serif-font text-white fs-3" id="modalTitle">Image Title</h4>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-4 py-2 text-center position-relative">
+                    <img id="modalImage" src="" alt="Full preview" class="lightbox-img">
+                    
+                    <!-- Prev / Next Navigation Buttons -->
+                    <button class="btn lightbox-nav-btn rounded-circle position-absolute top-50 start-0 translate-middle-y ms-5 shadow" onclick="navigateLightbox(-1)" aria-label="Previous image">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <button class="btn lightbox-nav-btn rounded-circle position-absolute top-50 end-0 translate-middle-y me-5 shadow" onclick="navigateLightbox(1)" aria-label="Next image">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="modal-footer border-0 px-4 pb-4 pt-2 justify-content-between">
+                    <p id="modalMeta" class="text-secondary small mb-0">Location & Camera Specs</p>
+                    <span id="modalCounter" class="eyebrow-label">Plate 01 / 08</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Gallery Data Array for Lightbox
+        const galleryData = [
+            {
+                title: "Emerald Valley Mist",
+                category: "Nature",
+                meta: "Scottish Highlands • 24mm f/2.8 • 1/250s",
+                src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1600&q=85"
+            },
+            {
+                title: "Solaris Glass Pavilion",
+                category: "Architecture",
+                meta: "Copenhagen, Denmark • 16mm f/4.0 • 1/500s",
+                src: "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1600&q=85"
+            },
+            {
+                title: "Azure Tide Rhythms",
+                category: "Ocean",
+                meta: "Amalfi Coast, Italy • 50mm f/2.0 • 1/1000s",
+                src: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=1600&q=85"
+            },
+            {
+                title: "Sunlit Alpine Ridge",
+                category: "Nature",
+                meta: "Dolomites, Italy • 35mm f/5.6 • 1/320s",
+                src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1600&q=85"
+            },
+            {
+                title: "Monolith Reflections",
+                category: "Architecture",
+                meta: "Tokyo, Japan • 24mm f/8.0 • 1/400s",
+                src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=85"
+            },
+            {
+                title: "Coral Horizon Dusk",
+                category: "Ocean",
+                meta: "Maldives Atoll • 28mm f/2.8 • 1/160s",
+                src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=85"
+            },
+            {
+                title: "Starlight Over the Summit",
+                category: "Featured Expedition",
+                meta: "Zermatt, Switzerland • 35mm f/1.4 • 15s Exposure",
+                src: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=85"
+            },
+            {
+                title: "Nordic Timber Sanctuary",
+                category: "Interior & Light",
+                meta: "Oslo, Norway • 35mm f/2.2 • 1/125s",
+                src: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1600&q=85"
+            }
+        ];
+
+        let currentIndex = 0;
+        let lightboxModalInstance = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lightboxModalInstance = new bootstrap.Modal(document.getElementById('lightboxModal'));
+            initCategoryFilter();
+            initSmoothParallaxAndSpotlight();
+        });
+
+        // 1. Category Filtering Logic
+        function initCategoryFilter() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Toggle active class
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filterValue = btn.getAttribute('data-filter');
+
+                    galleryItems.forEach(item => {
+                        if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                            item.classList.remove('d-none');
+                        } else {
+                            item.classList.add('d-none');
+                        }
+                    });
+                });
+            });
+        }
+
+        // 2. Silky Lerp Scroll Parallax + Interactive Hover Zoom & Cursor Sheen
+        function initSmoothParallaxAndSpotlight() {
+            const cards = document.querySelectorAll('.gallery-card');
+            const items = Array.from(document.querySelectorAll('.parallax-img')).map(img => ({
+                el: img,
+                card: img.closest('.gallery-card'),
+                currentY: 0,
+                targetY: 0,
+                currentScale: 1,
+                targetScale: 1
+            }));
+
+            // Track hover scale and radial cursor glow per card
+            cards.forEach((card, idx) => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                    card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                });
+
+                card.addEventListener('mouseenter', () => {
+                    if (items[idx]) items[idx].targetScale = 1.07;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    if (items[idx]) items[idx].targetScale = 1.0;
+                });
+            });
+
+            function animate() {
+                const viewportHeight = window.innerHeight;
+
+                items.forEach(item => {
+                    const rect = item.el.parentElement.getBoundingClientRect();
+                    if (rect.top < viewportHeight + 100 && rect.bottom > -100) {
+                        const progress = (viewportHeight - rect.top) / (viewportHeight + rect.height);
+                        item.targetY = (progress - 0.5) * -42;
+                    }
+
+                    // Smooth spring interpolation (lerp)
+                    item.currentY += (item.targetY - item.currentY) * 0.085;
+                    item.currentScale += (item.targetScale - item.currentScale) * 0.075;
+
+                    item.el.style.transform = `translate3d(0, ${item.currentY.toFixed(2)}px, 0) scale(${item.currentScale.toFixed(4)})`;
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // 3. Lightbox Controls
+        function openLightbox(index) {
+            currentIndex = index;
+            updateLightboxContent();
+            lightboxModalInstance.show();
+        }
+
+        function navigateLightbox(direction) {
+            currentIndex = (currentIndex + direction + galleryData.length) % galleryData.length;
+            updateLightboxContent();
+        }
+
+        function updateLightboxContent() {
+            const item = galleryData[currentIndex];
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalCategory').textContent = item.category;
+            document.getElementById('modalMeta').textContent = item.meta;
+            document.getElementById('modalImage').src = item.src;
+            const currentNum = String(currentIndex + 1).padStart(2, '0');
+            const totalNum = String(galleryData.length).padStart(2, '0');
+            document.getElementById('modalCounter').textContent = `Plate ${currentNum} / ${totalNum}`;
+        }
+
+        // Keyboard arrow support for Lightbox
+        document.addEventListener('keydown', (e) => {
+            const modalEl = document.getElementById('lightboxModal');
+            if (modalEl.classList.contains('show')) {
+                if (e.key === 'ArrowRight') navigateLightbox(1);
+                if (e.key === 'ArrowLeft') navigateLightbox(-1);
+            }
+        });
+    </script>
+</body>
+</html>
